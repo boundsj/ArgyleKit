@@ -63,25 +63,24 @@ struct RTMResponse: Decodable {
 }
 
 public struct Response {
-    var eventType: EventType
-    var json: String
-    var channel: String?
+    public var eventType: EventType
+    public var json: String
+    public var channel: String?
 }
 
 public class SlackRTMClient {
 
-    let token: String
-
-    private var messageId = 1
+    private let token: String
     private let worker = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     private var websocket: WebSocket?
     private var eventHandlers = [EventType: eventHandler]()
+    private var messageId = 1
 
-    init(token: String) {
+    public init(token: String) {
         self.token = token
     }
 
-    func start() {
+    public func start() {
         HTTPService.connect(token: token) { websocketString in
             print("Connecting with: \(websocketString)")
 
@@ -130,11 +129,11 @@ public class SlackRTMClient {
         }
     }
 
-    func on(event: EventType, handler: @escaping eventHandler) {
+    public func on(event: EventType, handler: @escaping eventHandler) {
         eventHandlers[event] = handler
     }
 
-    func sendMessage(channel: String, text: String) {
+    public func sendMessage(channel: String, text: String) {
         guard let websocket = websocket else {
             fatalError("No websocket available!")
         }
@@ -152,7 +151,7 @@ public class SlackRTMClient {
     }
 }
 
-extension String {
+private extension String {
 
     subscript(_ range: CountableRange<Int>) -> String {
         let idx1 = index(startIndex, offsetBy: max(0, range.lowerBound))
