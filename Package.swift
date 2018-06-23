@@ -12,6 +12,7 @@ let package = Package(
             targets: ["ArgyleKit"]),
     ],
     dependencies: [
+        // Pin to revision in my fork until there is an official fix for https://github.com/vapor/websocket/issues/10
         .package(url: "https://github.com/boundsj/websocket.git", .revision("834511bcb0f39b571918853e05b77587c93a2c0c"))
     ],
     targets: [
