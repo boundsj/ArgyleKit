@@ -11,10 +11,20 @@ public enum EventType: String {
 
 class HTTPService {
 
+#if os(Linux)
+    static let rtmConnectURLTemplate = "https://slack.com/api/rtm.connect?token=%s"
+#else
     static let rtmConnectURLTemplate = "https://slack.com/api/rtm.connect?token=%@"
+#endif
 
     class func connect(token: String, completion: @escaping (_ websocketString: String) -> () ) {
+#if os(Linux)
+        let urlString = token.withCString {
+            return String(format: rtmConnectURLTemplate, $0)
+        }
+#else          
         let urlString = String(format: rtmConnectURLTemplate, token)
+#endif  
         let url = URL(string: urlString)!
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
